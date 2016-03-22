@@ -84,13 +84,13 @@ val first_ten = enwiki.take(10)
 
 
 
-3) On forme facilement des tuples sur la catégorie et le topic de l'article en extrayant les deux premiers mots de chaque article avec `split`. Pour les dix premiers éléments, on obtient ainsi une `Array((NATURE,MAGNETISM), (LIFE,HYPNOSIS), (ARTS,ITALIAN_WRITERS), (NATURE,MINERALOGY), (SOCIETY,FUR_TRADE), (HEALTH,SCIENT   IFIC_TECHNIQUES), (LIFE,RACE_AND_INTELLIGENCE_CONTROVERSY), (BUSINESS,FORMS_OF_WATER), (BUSINESS,AQUATIC_ECOLOGY), (LANGUAGE,CARDINAL_NUMBERS))`
+3) On forme facilement des tuples sur la catégorie et le topic de l'article en extrayant les deux premiers mots de chaque article avec `split`. Pour les dix premiers éléments, on obtient ainsi une ((NATURE,MAGNETISM), (LIFE,HYPNOSIS), (ARTS,ITALIAN_WRITERS), (NATURE,MINERALOGY), (SOCIETY,FUR_TRADE), (HEALTH,SCIENT   IFIC_TECHNIQUES), (LIFE,RACE_AND_INTELLIGENCE_CONTROVERSY), (BUSINESS,FORMS_OF_WATER), (BUSINESS,AQUATIC_ECOLOGY), (LANGUAGE,CARDINAL_NUMBERS)).
 ```Spark
 val tuple_cat_topic = enwiki.map{i=> (i.split("\t")(0),i.split("\t")(1))}
 tuple_cat_topic.take(10)
 ```
 
-4) On utilise la méthode `reduceByKey(_+_)`pour faire la somme des articles par catégorie. Cela forme un tuple $(key: categorie, value: somme)$ qu'on peut trier avec `sortBy` sur son deuxième élément. Par ordre croissant, on obtient ainsi : `Array((SCIENCE,632), (CHRONOLOGY,799), (HISTORY,962), (SPORTS,1333), (LAW,1361), (PEOPLE,1441), (HEALTH,1890), (MEDICINE,1979), (MATHEMATICS,2542), (EDUCATION,3225), (AGRICULTURE,3250), (BELIEF,3802), (GEOGRAPHY,4394), (TECHNOLOGY,4942), (POLITICS,6806), (CULTURE,8350), (BUSINESS,10297), (HUMANITIES,13442), (ENVIRONMENT,16479), (NATURE,21461), (ARTS,42258), (LANGUAGE,44591), (SOCIETY,50459), (LIFE,70358))`
+4) On utilise la méthode `reduceByKey(_+_)`pour faire la somme des articles par catégorie. Cela forme un tuple $(key: categorie, value: somme)$ qu'on peut trier avec `sortBy` sur son deuxième élément. Par ordre croissant, on obtient ainsi : (SCIENCE,632), (CHRONOLOGY,799), (HISTORY,962), (SPORTS,1333), (LAW,1361), (PEOPLE,1441), (HEALTH,1890), (MEDICINE,1979), (MATHEMATICS,2542), (EDUCATION,3225), (AGRICULTURE,3250), (BELIEF,3802), (GEOGRAPHY,4394), (TECHNOLOGY,4942), (POLITICS,6806), (CULTURE,8350), (BUSINESS,10297), (HUMANITIES,13442), (ENVIRONMENT,16479), (NATURE,21461), (ARTS,42258), (LANGUAGE,44591), (SOCIETY,50459), (LIFE,70358)).
 ```Spark
 val sum_by_category = enwiki.map{i=> (i.split("\t")(0),1)}.reduceByKey(_+_)
 sum_by_category.collect()
